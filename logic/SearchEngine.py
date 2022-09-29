@@ -25,19 +25,18 @@ class SearchEngine:
         self.vocab = self.load_vocab()
         if search_svd:
             if svd_k == 100:
-                self.svd_matrix = np.load("matrixes/svd_matrix.npz")['svd_matrix']
-                self.svd_components = np.load("matrixes/svd_comps.npz")['svd_comps']
+                self.svd_matrix = np.load("../matrixes/svd_matrix.npz")['svd_matrix']
+                self.svd_components = np.load("../matrixes/svd_comps.npz")['svd_comps']
             else:
                 svd = TruncatedSVD(n_components=svd_k).fit(self.tfidf_matrix.T)
                 self.svd_matrix = svd.transform(self.tfidf_matrix.T)
                 self.svd_components = svd.components_
-
             self.search_function = self.search_with_svd
         else:
             self.search_function = self.search_with_no_svd
 
     def load_vocab(self):
-        a_file = open("matrixes/union.pkl", "rb")
+        a_file = open("../matrixes/union.pkl", "rb")
         vocab = pickle.load(a_file)
         a_file.close()
         return vocab
@@ -50,6 +49,7 @@ class SearchEngine:
                 input_vector[self.vocab[word]] += 1
         if len(input_vector) == 0:
             raise IOError
+        print(stemmed_words)
 
         return self.search_function(input_vector)
 
@@ -74,10 +74,10 @@ class SearchEngine:
     def prepare_files(self, svd_k):
         all_files = self.all_files if self.all_files else glob.glob(f"{self.directory}/*")
 
-        if not exists("matrixes/tfidf_matrix.npz") \
-                or not exists("matrixes/svd_matrix.npz") \
-                or not exists("matrixes/union.pkl") \
-                or not exists("matrixes/svd_comps.npz"):
+        if not exists("../matrixes/tfidf_matrix.npz") \
+                or not exists("../matrixes/svd_matrix.npz") \
+                or not exists("../matrixes/union.pkl") \
+                or not exists("../matrixes/svd_comps.npz"):
 
             tfidf_vec = TfidfVectorizer(input='filename')
             matrix = tfidf_vec.fit_transform(all_files)
@@ -85,47 +85,43 @@ class SearchEngine:
             svd_matrix = svd.transform(matrix)
             svd_components = svd.components_
 
-            if not exists("matrixes/tfidf_matrix.npz"):
+            if not exists("../matrixes/tfidf_matrix.npz"):
                 scipy.sparse.save_npz("matrixes/tfidf_matrix", matrix, compressed=True)
 
-            if not exists("matrixes/union.pkl"):
-                a_file = open("matrixes/union.pkl", "wb")
+            if not exists("../matrixes/union.pkl"):
+                a_file = open("../matrixes/union.pkl", "wb")
                 pickle.dump(tfidf_vec.vocabulary_, a_file)
                 a_file.close()
 
-            if not exists("matrixes/svd_matrix.npz"):
+            if not exists("../matrixes/svd_matrix.npz"):
                 np.savez_compressed("matrixes/svd_matrix", svd_matrix=svd_matrix)
 
-            if not exists("matrixes/svd_comps.npz"):
+            if not exists("../matrixes/svd_comps.npz"):
                 np.savez_compressed("matrixes/svd_comps", svd_comps=svd_components)
 
     def search_with_svd(self, input_vector):
         svd_inp = self.svd_components @ input_vector
         svd_q = self.svd_matrix @ svd_inp
-        res = [(document_id, svd_q[document_id]) for document_id in range(len(self.all_files))]
+        res = [(document_id, svd_q[document_id]) for document_id in range(len(self.all_files)-1)]
         res.sort(key=lambda x: x[1], reverse=True)
-
-        logging.log("with svd")
         for i in range(self.num_of_results):
-            logging.log(self.all_files[res[i][0]])
+            print(self.all_files[res[i][0]])
 
         return self.parse_result(res[:self.num_of_results])
 
     def search_with_no_svd(self, input_vector):
-
         sparse_vec = normalize(scipy.sparse.csr_matrix(input_vector))
         matrix = normalize(self.tfidf_matrix, axis=0)
-
         res = sparse_vec @ matrix
         x = []
         for i in range(res.shape[1]):
             tmp = res.getcol(i).data
             if len(tmp) > 0:
                 x.append((i, tmp[0]))
-
         x.sort(key=lambda x: x[1], reverse=True)
-        logging.log("without svd")
+
         for i in range(self.number_of_results):
             print(self.all_files[x[i][0]])
 
         return self.parse_result(x[:self.num_of_results])
+

@@ -9,7 +9,7 @@ function App() {
 
   const fetchData =  async () => {
 
-     fetch("/search", {
+     fetch("/search ", {
         headers : { 
           'Content-Type': 'application/json',
           'Accept': 'application/json'

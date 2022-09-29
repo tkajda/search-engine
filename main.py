@@ -1,10 +1,7 @@
 from flask import Flask
 from flask import request
-import logging
 
-from logic.Parser import Parser
 from logic.SearchEngine import SearchEngine
-from logic.WebCrawler import Crawler
 
 
 class Server:
@@ -20,7 +17,7 @@ class Server:
             req = str(request.data.decode())
             req = req[1:]
             req = req[:-1]
-            logging.log(req)
+            print(req)
             try:
                 response_data = self.se.search(req)
             except IOError:
@@ -35,6 +32,6 @@ class Server:
 if __name__ == "__main__":
     # Crawler(['/wiki/Tea']).run()
     # Parser().run()
-    engine = Server(number_of_results=15, prepare_necc_files=True)
+    engine = Server(number_of_results=15)
     engine.run()
     del engine

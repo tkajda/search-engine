@@ -11,7 +11,7 @@ class Parser:
     def __init__(self):
         self.stop_words = set(stopwords.words('english'))
         self.stemmer = PorterStemmer()
-        self.directory = 'articles'
+        self.directory = '../articles'
 
     def stem_text(self, text):
         """
@@ -56,7 +56,7 @@ class Parser:
             f.write(res1)
 
     def run(self):
-        parsed_files = 'parsed-files/'
+        parsed_files = '../parsed-files/'
         for i, filename in enumerate(os.listdir(self.directory)):
             file_name = os.path.join(self.directory, filename)
             new_name = parsed_files + str(i) + "@" + filename

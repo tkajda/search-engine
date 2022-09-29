@@ -23,7 +23,7 @@ class Crawler:
     def write_text_to_file(self, article, f_name):
         if article:
             self.file_counter += 1
-            path = 'articles/' + str(f_name[6:]) + '.txt'
+            path = '../articles/' + str(f_name[6:]) + '.txt'
             with open(path, 'w+', encoding='utf-8') as f:
                 f.write(article.text)
 
