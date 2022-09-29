@@ -1,0 +1,63 @@
+* { 
+    box-sizing: border-box;
+    margin:auto;
+    padding: auto;
+    font-family: "Andale Mono", AndaleMono, monospace;
+}
+
+.App {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    position:relative;
+    top:50px;
+
+}
+h1,h2 {
+    margin: 1.3rem; 
+}
+input {
+    font :25px;
+    padding-left: 20px;
+    width:500px;
+    height:33px;
+    border-radius: 25px;
+}
+.button-row {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+}
+
+button {
+    height: 40px;
+    margin-top: 20px;
+    border-radius: 20px;
+    width: 100px;
+    
+}
+
+
+h1 {
+    color: black;
+}
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -9999;
+    width:100vw;
+    height:100vw;
+    background-color: rgb(255, 201, 199);
+}
+
+.singleResult {
+    text-align: left;
+    margin:20px 0 0 150px;
+    /* justify-items: left; */
+    /* justify-content: left; */
+}
+a {
+    text-decoration: dashed;
+}
