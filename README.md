@@ -34,7 +34,7 @@ Entering a phrase to search steps are similiar: words are stemmed and vector of 
 
 ---
 ## `Proof of concept`
-As an example I collected 45000+ files of wikipedia articles with the union of words at size > 1 100 000. I have also prepared basic front-end [[here](https://github.com/tkajda/search-engine/tree/main/front-end/search-engine-front-end)] and default Flask server which handles the request [[here(https://github.com/tkajda/search-engine/blob/main/main.py)]
+As an example I collected 45000+ files of wikipedia articles with the union of words at size > 1 100 000. I have also prepared basic front-end [[here](https://github.com/tkajda/search-engine/tree/main/front-end/search-engine-front-end)] and default Flask server which handles the request [here](https://github.com/tkajda/search-engine/blob/main/main.py)]
 
 
 <p align="center">
